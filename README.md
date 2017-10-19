@@ -9,7 +9,7 @@ Thankfully derived from redis_poolex.
 
     Redis.query(["SET", "key1", "value1"]) => "OK"
     Redis.query(["GET", "key1"]) => "value1"
-    Redis.query(["GET", "key2"]) => :undefined
+    Redis.query(["GET", "key2"]) => nil
 
 ## Installation
 
