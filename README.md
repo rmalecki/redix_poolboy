@@ -1,10 +1,11 @@
-# RedisPoolex
+# RedixPoolboy
 
-Redis connection pool using poolboy and exredis libraries.
+Redis connection pool using poolboy and redix libraries.
+Thankfully derived from redis_poolex.
 
 # Examples
 
-    alias RedisPoolex, as: Redis
+    alias RedixPoolboy, as: Redis
 
     Redis.query(["SET", "key1", "value1"]) => "OK"
     Redis.query(["GET", "key1"]) => "value1"
@@ -12,18 +13,18 @@ Redis connection pool using poolboy and exredis libraries.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/packages/redis_poolex), the package can be installed as:
+If [available in Hex](https://hex.pm/packages/redix_poolboy), the package can be installed as:
 
-  1. Add redis_poolex to your list of dependencies in `mix.exs`:
+  1. Add redix_poolboy to your list of dependencies in `mix.exs`:
 
         def deps do
-          [{:redis_poolex, "~> 0.0.5"}]
+          [{:redix_poolboy, "~> 0.0.1"}]
         end
 
-  2. Ensure redis_poolex is started before your application:
+  2. Ensure redix_poolboy is started before your application:
 
         def application do
-          [applications: [:redis_poolex]]
+          [applications: [:redix_poolboy]]
         end
 
 ## Dev Env

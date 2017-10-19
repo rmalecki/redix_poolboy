@@ -1,10 +1,10 @@
-defmodule RedisPoolex.Worker do
+defmodule RedixPoolboy.Worker do
   @moduledoc """
-  Worker for getting connction to Redis and run queries via `Exredis`
+  Worker for getting connction to Redis and run queries via `Redix`
   """
   require Logger
 
-  import Exredis
+  import Redix
 
   use GenServer
 
@@ -22,26 +22,28 @@ defmodule RedisPoolex.Worker do
   end
 
   defmodule Connector do
-    require Exredis
+    require Redix
     require Logger
 
-    alias RedisPoolex.Config
+    alias RedixPoolboy.Config
 
     @doc """
-    Using config `redis_poolex` to connect to redis server via `Exredis`
+    Using config `redix_poolboy` to connect to redis server via `Redix`
     """
     def connect() do
       connection_string = Config.get(:connection_string)
       client = if connection_string do
-        Exredis.start_using_connection_string(connection_string)
+        {:ok, client} = Redix.start_link(connection_string)
+
+        client
       else
         host = Config.get(:host, "127.0.0.1")
         port = Config.get(:port, 6379)
-        password = Config.get(:password, "")
+        password = Config.get(:password, nil)
         database = Config.get(:db, 0)
         reconnect = Config.get(:reconnect, :no_reconnect)
+        {:ok, client} = Redix.start_link(host: host, port: port, password: password, database: database)
 
-        {:ok, client} = Exredis.start_link(host, port, database, password, reconnect)
         client
       end
 
@@ -84,11 +86,11 @@ defmodule RedisPoolex.Worker do
 
   @doc false
   def q(conn, params) do
-    query(conn, params)
+    command(conn, params)
   end
 
   @doc false
   def p(conn, params) do
-    query_pipe(conn, params)
+    pipeline(conn, params)
   end
 end

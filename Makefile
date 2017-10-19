@@ -1,5 +1,5 @@
-NAME = redis_poolex
-NETWORK = redispoolex_back-tier
+NAME = redix_poolboy
+NETWORK = redixpoolboy_back-tier
 
 build:
 	docker-compose up -d

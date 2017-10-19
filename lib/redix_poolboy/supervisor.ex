@@ -1,4 +1,4 @@
-defmodule RedisPoolex.Supervisor do
+defmodule RedixPoolboy.Supervisor do
   require Logger
 
   @moduledoc """
@@ -14,13 +14,13 @@ defmodule RedisPoolex.Supervisor do
   # TODO: add it as config options instead of compiled variables
   @pool_name :redis_pool
 
-  alias RedisPoolex.Config
+  alias RedixPoolboy.Config
 
   def init([]) do
     # Here are my pool options
     pool_options = [
       name: {:local, @pool_name},
-      worker_module: RedisPoolex.Worker,
+      worker_module: RedixPoolboy.Worker,
       size: Config.get(:pool_size, 10),
       max_overflow: Config.get(:pool_max_overflow, 1)
     ]
@@ -35,11 +35,19 @@ defmodule RedisPoolex.Supervisor do
   @doc """
   Making query via connection pool using `%{command: command, params: params}` pattern.
   """
-  def q(args) do
-    :poolboy.transaction(@pool_name, fn(worker) -> GenServer.call(worker, %{command: :query, params: args}) end, Config.get(:timeout, 5000))
+  def command(args) do
+    :poolboy.transaction(
+      @pool_name,
+      fn (worker) -> GenServer.call(worker, %{command: :query, params: args}) end,
+      Config.get(:timeout, 5000)
+    )
   end
 
-  def p(args) do
-    :poolboy.transaction(@pool_name, fn(worker) -> GenServer.call(worker, %{command: :query_pipe, params: args}) end, Config.get(:timeout, 5000))
+  def pipeline(args) do
+    :poolboy.transaction(
+      @pool_name,
+      fn (worker) -> GenServer.call(worker, %{command: :query_pipe, params: args}) end,
+      Config.get(:timeout, 5000)
+    )
   end
 end

@@ -1,8 +1,8 @@
-defmodule RedisPoolexTest do
+defmodule RedixPoolboyTest do
   use ExUnit.Case
-  doctest RedisPoolex
+  doctest RedixPoolboy
 
-  alias RedisPoolex, as: Redis
+  alias RedixPoolboy, as: Redis
 
   test "basic method using connection pool" do
     Redis.query(["FLUSHDB"])
@@ -12,7 +12,7 @@ defmodule RedisPoolexTest do
 
     Redis.query(["HSET", "users", "1", "value"])
     assert Redis.query(["HGET", "users", "1"]) == "value"
-    assert Redis.query(["HGET", "users", "2"]) == :undefined
+    assert Redis.query(["HGET", "users", "2"]) == nil
   end
 
   test "use pipe for multiple operations" do
@@ -21,8 +21,9 @@ defmodule RedisPoolexTest do
     Redis.query_pipe([
       ["SET", "key1", "value1"],
       ["SET", "key2", "value2"],
+      ["SET", "key1", "value1_1"],
     ])
-    assert Redis.query(["GET", "key1"]) == "value1"
+    assert Redis.query(["GET", "key1"]) == "value1_1"
     assert Redis.query(["GET", "key2"]) == "value2"
   end
 end

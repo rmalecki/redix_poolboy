@@ -1,15 +1,19 @@
-defmodule RedisPoolex do
+defmodule RedixPoolboy do
   @moduledoc ~S"""
   Application for running connection pool and redis connection inside.
 
   ## Example:
 
     ```elixir
-    alias RedisPoolex, as: Redis
+    alias RedixPoolboy, as: Redis
 
     Redis.query(["SET", "key1", "value1"]) => "OK"
     Redis.query(["GET", "key1"]) => "value1"
-    Redis.query(["GET", "key2"]) => :undefined
+    Redis.query(["GET", "key2"]) => nil
+
+    Redis.command(["SET", "key1", "value1"]) => {:ok, "OK"}
+    Redis.command(["GET", "key1"]) => {:ok, "value1"}
+    Redis.command(["GET", "key2"]) => {:ok, nil}
     ```
   """
 
@@ -21,26 +25,34 @@ defmodule RedisPoolex do
     import Supervisor.Spec, warn: false
 
     children = [
-      supervisor(RedisPoolex.Supervisor, [])
+      supervisor(RedixPoolboy.Supervisor, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: RedisPoolex.Supervisor]
+    opts = [strategy: :one_for_one, name: RedixPoolboy.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
   @doc ~S"""
-  `query` sends commands directly to Redis
+  `command` sends commands directly to Redis
   """
+  def command(args) do
+    RedixPoolboy.Supervisor.command(args)
+  end
   def query(args) do
-    RedisPoolex.Supervisor.q(args)
+    {:ok, value} = command args
+    value
   end
 
   @doc ~S"""
-  `query_pipe` sends multiple commands as batch directly to Redis.
+  `pipeline` sends multiple commands as batch directly to Redis.
   """
+  def pipeline(args) do
+    RedixPoolboy.Supervisor.pipeline(args)
+  end
   def query_pipe(args) do
-    RedisPoolex.Supervisor.p(args)
+    {:ok, value} = pipeline args
+    value
   end
 end
