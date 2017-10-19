@@ -2,7 +2,7 @@ defmodule RedixPoolboy.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :redis_poolex,
+    [app: :redix_poolboy,
      version: "0.0.1",
      elixir: "~> 1.5",
      description: description(),
