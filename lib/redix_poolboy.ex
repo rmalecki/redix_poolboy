@@ -48,9 +48,11 @@ defmodule RedixPoolboy do
   @doc ~S"""
   `pipeline` sends multiple commands as batch directly to Redis.
   """
+  def pipeline([]), do: {:ok, []}
   def pipeline(args) do
     RedixPoolboy.Supervisor.pipeline(args)
   end
+
   def query_pipe(args) do
     {:ok, value} = pipeline args
     value
