@@ -25,7 +25,8 @@ defmodule RedixPoolboy do
     import Supervisor.Spec, warn: false
 
     children = [
-      %{id: RedixPoolboy.Supervisor, start: {RedixPoolboy, :start_link, []}, type: :supervisor}
+      %{id: RedixPoolboy.Supervisor, 
+        start: {RedixPoolboy.Supervisor, :start_link, []}, type: :supervisor}
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
