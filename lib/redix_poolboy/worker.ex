@@ -41,7 +41,7 @@ defmodule RedixPoolboy.Worker do
         port = Config.get(:port, 6379)
         password = Config.get(:password, nil)
         database = Config.get(:db, 0)
-        reconnect = Config.get(:reconnect, :no_reconnect)
+        # reconnect = Config.get(:reconnect, :no_reconnect)
         {:ok, client} = Redix.start_link(host: host, port: port, password: password, database: database)
 
         client

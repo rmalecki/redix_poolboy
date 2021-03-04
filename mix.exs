@@ -18,6 +18,7 @@ defmodule RedixPoolboy.Mixfile do
   def application do
     [
       applications: [:logger],
+      extra_applications: [:poolboy, :redix],
       mod: {RedixPoolboy, []}
     ]
   end
